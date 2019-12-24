@@ -136,14 +136,22 @@ app.post('/app/create-product', function (req, res) {
         .then(function (response) {
             console.log(response.body);
             if (response.statusCode == 201) {
-                res.json(true);
+                res.json({
+                    success: true,
+                    product: new_product
+                });
             } else {
-                res.json(false);
+                res.json({
+                    success: false,
+                    product: []
+                });
             }
         })
         .catch(function (err) {
-            console.log(err);
-            res.json(false);
+            res.json({
+                success: false,
+                err
+            });
         });
 });
 
