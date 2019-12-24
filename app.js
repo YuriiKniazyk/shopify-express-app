@@ -33,7 +33,7 @@ app.get('/shopify', (req, res) => {
         return res.status(400).send('Missing shop parameter. Please add ?shop=your-development-shop.myshopify.com to your request');
     }
 });
-
+sfsdf
 app.get('/shopify/callback', (req, res) => {
     const { shop, hmac, code, state } = req.query;
     const stateCookie = cookie.parse(req.headers.cookie).state;
