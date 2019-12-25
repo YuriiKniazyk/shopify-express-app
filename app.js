@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
-const {resolve} = require('path');
+const {resolve: resolvePath} = require('path');
 const routes = require('./routes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(resolve(__dirname, 'public')));
+app.use(express.static(resolvePath(__dirname, 'public')));
 
 app.use('/', routes.ShopifyRouter);
 
