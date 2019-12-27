@@ -2,15 +2,8 @@ const request = require('request-promise');
 
 module.exports = (req, res) => {
     try {
-        const {title, body_html, vendor, product_type, tags} = req.body;
         let new_product = {
-            product: {
-                title,
-                body_html,
-                vendor,
-                product_type,
-                tags
-            }
+            product: req.body.product
         };
         let url = 'https://' + req.query.shop + '/admin/products.json';
 

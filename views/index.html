@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShopifyAPP</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../public/js/style.css">
+</head>
+<body>
+    <div id="app">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Body_html</th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">Product_type</th>
+                    <th scope="col">Tags</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+            <tbody>
+                <tr
+                    v-for="product in products"
+                    :key="product.id"
+                    class="table-primary"
+                >
+                    <th scope="row">{{product.id}}</th>
+                    <td>{{product.title}}</td>
+                    <td v-html="product.body_html"></td>
+                    <td>{{product.vendor}}</td>
+                    <td>{{product.product_type}}</td>
+                    <td>{{product.tags}}</td>
+                    <td>
+                        <button
+                            class="btn btn-danger"
+                            @click="deleteProduct(product.id)"
+                        >
+                            Delete Product
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button
+            class="btn btn-primary"
+            @click="createProduct=!createProduct"
+        >
+            Create Product
+        </button>
+        <button
+            class="btn btn-warning"
+            @click="fetchProducts"
+        >
+            View All
+        </button>
+
+        <form
+            v-if="createProduct"
+            @submit.prevent="createProductFetch"
+        >
+            <div class="container">
+                <h1>Create Product</h1>
+                <hr>
+                <label for="Title"><b>Title</b></label>
+                <input v-model="product.title" type="text" placeholder="Enter Title" name="title">
+
+                <label for="body_html"><b>Body_html</b></label>
+                <input v-model="product.body_html" type="text" placeholder="Enter Body_html" name="body_html">
+
+                <label for="vendor"><b>Vendor</b></label>
+                <input v-model="product.vendor" type="text" placeholder="Vendor" name="vendor">
+
+                <label for="product_type"><b>Product_type</b></label>
+                <input v-model="product.product_type" type="text" placeholder="Product_type" name="product_type">
+
+                <label for="tags"><b>Tags</b></label>
+                <input v-model="product.tags" type="text" placeholder="Tags" name="tags">
+                <hr>
+                <button type="submit" class="registerbtn">Create</button>
+            </div>
+        </form>
+    </div>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            products: [],
+            createProduct: false,
+            product: {
+                title: '',
+                body_html: '',
+                vendor: '',
+                product_type: '',
+                tags: ''
+            }
+        },
+        mounted() {
+            this.fetchProducts();
+        },
+        methods: {
+            fetchProducts() {
+                fetch('http://localhost:3002/shopify/product?shop=test-express-app.myshopify.com')
+                .then(res => res.json())
+                .then((res) => {
+                    this.products = res.products;
+                });
+            },
+            createProductFetch(e) {
+                e.preventDefault();
+
+                fetch('http://localhost:3002/shopify/create-product?shop=test-express-app.myshopify.com', {
+                    method: 'POST',
+                    body: JSON.stringify({product: this.product}),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(res => res.json())
+                    .then(res => console.log(res))
+                    .finally(()=>this.createProduct = false)
+
+            },
+            deleteProduct(id) {
+                fetch('http://localhost:3002/shopify/delete?shop=test-express-app.myshopify.com&id=' + id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(res => console.log(res))
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
