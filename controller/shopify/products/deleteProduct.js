@@ -3,7 +3,6 @@ const request = require('request-promise');
 module.exports = (req, res) => {
     try {
         let url = 'https://' + req.query.shop + '/admin/products/' + req.query.id + '.json';
-        console.log(url);
         let options = {
             method: 'DELETE',
             uri: url,

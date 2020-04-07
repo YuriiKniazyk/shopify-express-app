@@ -25,7 +25,6 @@ module.exports = (req, res) => {
             res.json(parsedBody.body);
         })
         .catch(function (err) {
-            console.log(err);
             res.json(err);
         });
     } catch (e) {
